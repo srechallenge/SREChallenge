@@ -32,8 +32,8 @@
   - Monitoring software like nagios
   - Syslog forwarding to something like graylog
 
-##Installed Software
-###Host VM Installed Software
+## Installed Software
+### Host VM Installed Software
 - VMWare Player CentOS vm with 8GB ram with 4 CPUs with the following software installed
   - sudo utils/setup_virtualbox_server.sh  
     - Vitualbox 5.1.28_117968
