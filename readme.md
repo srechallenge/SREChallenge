@@ -3,15 +3,15 @@
 
 ## Challenge
 1. Create an instance of a web server that serves a static page via SSL with a redirect from 80 to 443
-**I chose to use vagrant to build the webserver vm using the Ansible provisioner
+- I chose to use vagrant to build the webserver vm using the Ansible provisioner
 
 2. Secure Server via a firewall to only expose ports 80 and 443
-.. There are two interfaces on the VM, eth0 which I consider a managemnet network has ssh enabled for administration, eth1 which is the public interface is allowing only ports 80 and 443 enabled.
+- There are two interfaces on the VM, eth0 which I consider a managemnet network has ssh enabled for administration, eth1 which is the public interface is allowing only ports 80 and 443 enabled.
 
 3. Use an automated configuration management tool
-.. I used Ansible to perform the folowing
-... Start and enable firwalld
-... Move eth0 to the internal firewall zone
+- I used Ansible to perform the folowing
+-- Start and enable firwalld
+-- Move eth0 to the internal firewall zone
 ... Remove ssh from the public firewall zone
 ... Add http and https to the public firewall zone
 ... Install the httpd and mod_ssl rpms
