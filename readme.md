@@ -31,6 +31,7 @@
   - Front end haproxy nodes and an additional webserver node for HA
   - Monitoring software like nagios
   - Syslog forwarding to something like graylog
+  - Clean up the httpd config it works but I am not happy with it
 
 ## Installed Software
 ### Host VM Installed Software
@@ -45,6 +46,8 @@
     - ruby
     - serverspec
   - sudo utils/setup_GUI.sh (If you want to use a GUI on your virtualbox server vm)
+    - xorg
+    - Gnome Desktop
   
 ## Web Server client VM
 - Ansible 2.4.0 (This is installed during the vagrant up run)
