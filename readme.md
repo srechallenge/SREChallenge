@@ -57,7 +57,7 @@
 ## Web Server client VM
 - Ansible 2.4.0 (This is installed during the vagrant up run)
 
-## Setup the virtualbox host VM ( for windows users - I did this to keep my base OS clean )
+## Setup the virtualbox host VM ( Used to build the vmware virtualbox host vm the the webserver vm will be created on )
 1. Built VM Base vm from CentOS-7-x86_64-Minimal-1708.iso - 8GB Ram, 4CPU, 20GB disk at least
 2. Install git 
 - ```yum install -y git```
@@ -77,9 +77,9 @@
 1. Git clone the repo
 - ```git clone https://github.com/srechallenge/SREChallenge.git```
 2. cd into vagrant directory
-- cd vagrant
+- ``` cd vagrant ```
 3. Execute vagrant up
-- vagrant up
+-  ``` vagrant up ```
 - *Note*: You will be prompted for the vault password after Vagrant has created the VM prior to Ansible execution.
 ```
     default: Running ansible-playbook...
