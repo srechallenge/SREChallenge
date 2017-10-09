@@ -82,7 +82,7 @@
 Vault password: 
 ```
 - *Note*: At the end of the provision run, you will see a debug msg: Open Browser to http://192.168.1.57 (This IP will change)
-....  This is will be the ip address that you need to browse to to get the Hello World! page.
+  - This is will be the ip address that you need to browse to to get the Hello World! page.
 ```
 TASK [debug] *******************************************************************
 ok: [webserver] => {
