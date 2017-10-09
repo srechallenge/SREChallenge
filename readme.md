@@ -57,7 +57,7 @@
 ## Web Server client VM
 - Ansible 2.4.0 (This is installed during the vagrant up run)
 
-## Setup the virtualbox host VM ( Used to build the vmware virtualbox host vm the the webserver vm will be created on )
+## Setup the virtualbox host VM ( Used to build the vmware virtualbox host vm the webserver vm will be created on )
 1. Built VM Base vm from CentOS-7-x86_64-Minimal-1708.iso - 8GB Ram, 4CPU, 20GB disk at least
 2. Install git 
 - ```yum install -y git```
