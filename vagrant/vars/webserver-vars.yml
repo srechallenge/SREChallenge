@@ -1,0 +1,3 @@
+# SSL Cert and Key File names
+ssl_crt: "webserver.com.crt"
+ssl_key: "webserver.com.key"

@@ -1,0 +1,117 @@
+---
+- name: Install and Congfigure httpd
+  hosts: webservers
+  become: true
+  vars_files: 
+    - vault/webserver-vault.yml
+    - vars/webserver-vars.yml
+  
+  tasks:
+  - name: Enable and Start firewalld
+    systemd:
+      name: firewalld
+      enabled: yes
+      state: started
+
+  - name: Disable RPC Bind
+    systemd:
+      name: rpcbind.service
+      enabled: no
+      masked: yes
+      state: stopped
+
+  - name: Move eth0 into the Internal zone in firewalld
+    shell: 'nmcli connection modify "System eth0" connection.zone internal'
+
+  - firewalld:
+       zone: "{{ item.zone }}"
+       service: "{{ item.service }}"
+       permanent: "{{ item.permanent }}"
+       state: "{{ item.state }}"
+       immediate: yes
+    with_items:
+      - { zone: 'public', service: 'https', permanent: true, state: "enabled" }
+      - { zone: 'public', service: 'http', permanent: true, state: "enabled" }
+      - { zone: 'public', service: 'ssh', permanent: true, state: "disabled" }
+      - { zone: 'public', service: 'rpcbind', permanent: true, state: "disabled" }
+      - { zone: 'public', service: 'dhcpv6-client', permanent: true, state: "disabled" }
+
+  - name: Install httpd
+    yum:
+     name: "{{ item }}"
+     state: present
+    with_items:
+     - httpd
+     - mod_ssl
+
+  - name: Clean up default web server configs
+    file:
+     path: '{{ item.file }}'
+     state: absent
+    with_items:
+      - { file: '/etc/httpd/conf.d/autoindex.conf' }
+      - { file: '/etc/httpd/conf.d/README' }
+      - { file: '/etc/httpd/conf.d/userdir.conf' }
+      - { file: '/etc/httpd/conf.d/welcome.conf' }
+
+  - name: Copy in Static index.html
+    copy:
+     src: files/index.html
+     dest: /var/www/html/index.html
+     force: no
+     backup: yes
+
+  - name: Update httpd.conf file
+    template:
+      src: templates/httpd.conf.j2
+      dest: /etc/httpd/conf/httpd.conf
+      owner: root
+      group: root
+      mode: 0644
+      backup: yes
+    register: httpd_restarted
+
+  - name: Update ssl.conf file
+    template:
+      src: templates/ssl.conf.j2
+      dest: /etc/httpd/conf.d/ssl.conf
+      owner: root
+      group: root
+      mode: 0644
+      backup: yes
+    register: httpd_restarted
+
+  - name: Copy Certificates to webserver
+    copy:
+      content: "{{ item.content }}"
+      dest: "/etc/pki/tls/private/{{ item.name }}"
+      owner: root
+      group: root
+      mode: "u=rw,g=r,o="
+    with_items:
+      - "{{ certificates.private }}"
+
+  - name: Copy Certificates to webserver
+    copy:
+      content: "{{ item.content }}"
+      dest: "/etc/pki/tls/certs/{{ item.name }}"
+      owner: root
+      group: root
+      mode: "u=rw,g=r,o="
+    with_items:
+      - "{{ certificates.certs }}"
+
+  - name: Enable HTTPD to start at boot
+    systemd:
+      name=httpd
+      enabled=yes
+  
+  - name: Reload httpd
+    systemd:
+      name: httpd.service
+      state: restarted
+      enabled: yes
+    when: httpd_restarted.changed
+
+  - debug:
+     msg: "Open Browser to http://{{ ansible_eth1.ipv4.address }}"
