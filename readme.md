@@ -23,7 +23,7 @@
   - Spit out the Public IP address to connect to
 
 4. Develop and apply automated tests to verify correctness of the server configuration.
-- Serverspec was used to verify the server configuration
+   - Serverspec was used to verify the server configuration
 
 ## If I had more time to put into the challenge
 - Modify the deployment to add the following
