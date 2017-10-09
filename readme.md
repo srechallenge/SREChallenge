@@ -9,7 +9,7 @@
 - There are two interfaces on the VM, eth0 which I consider a managemnet network has ssh enabled for administration, eth1 which is the public interface is allowing only ports 80 and 443 enabled.
 
 3. Use an automated configuration management tool
-- I used Ansible to perform the folowing
+- Ansible was used to perform the folowing
   - Start and enable firwalld
   - Move eth0 to the internal firewall zone
   - Remove ssh from the public firewall zone
@@ -23,14 +23,18 @@
   - Spit out the Public IP address to connect to
 
 4. Develop and apply automated tests to verify correctness of the server configuration.
-- I used serverspec for automated testing
-  - Serverspec verfies each of the Ansible steps
+- Serverspec was used to verify the server configuration
 
 ## If I had more time to put into the challenge
 - Modify the deployment to add the following
-  - Front end haproxy nodes and an additional webserver node for HA
+  - Create a haproxy cluster which Serves SSL and hosts the re-direct from http to https
+    - Move the web server behind the haproxy cluster, and add an additional web server node
   - Monitoring software like nagios
+    - To monitor the server
+    - To monitor the web service is up and serving content
   - Syslog forwarding to something like graylog
+    - To forward all of the system and application logs to the graylog server for engineers to use for operations and security related events
+  - Harden the web server further
   - Clean up the httpd config it works but I am not happy with it
 
 ## Installed Software
@@ -53,7 +57,7 @@
 ## Web Server client VM
 - Ansible 2.4.0 (This is installed during the vagrant up run)
 
-## Setup the virtualbox host VM ( for windows users - I did this to keep my base OS clean )
+## Setup the virtualbox host VM ( Used to build the vmware virtualbox host vm the webserver vm will be created on )
 1. Built VM Base vm from CentOS-7-x86_64-Minimal-1708.iso - 8GB Ram, 4CPU, 20GB disk at least
 2. Install git 
 - ```yum install -y git```
@@ -73,9 +77,9 @@
 1. Git clone the repo
 - ```git clone https://github.com/srechallenge/SREChallenge.git```
 2. cd into vagrant directory
-- cd vagrant
+- ``` cd vagrant ```
 3. Execute vagrant up
-- vagrant up
+-  ``` vagrant up ```
 - *Note*: You will be prompted for the vault password after Vagrant has created the VM prior to Ansible execution.
 ```
     default: Running ansible-playbook...
