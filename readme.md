@@ -36,23 +36,40 @@
 ## Installed Software
 ### Host VM Installed Software
 - VMWare Player CentOS vm with 8GB ram with 4 CPUs with the following software installed
-  - sudo utils/setup_virtualbox_server.sh  - which installs the following software
+  - setup_virtualbox_server.sh  - which installs the following software
     - Vitualbox 5.1.28_117968
     - Ansible 2.3.2 (Can not use version 2.4 due to a bug with the Vagrant --ask_vault_pass flag)
     - Vagrant 2.0.0
     - nmap
     - runs the vboxconfigure command to build the kernel modules
-  - sudo utils/setup_serverspec.sh
+  - setup_serverspec.sh
     - ruby
     - serverspec
-  - sudo utils/setup_GUI.sh (If you want to use a GUI on your virtualbox server vm)
+  - setup_GUI.sh (If you want to use a GUI on your virtualbox server vm)
+    - *Requires the vmware tools to be installed on the virtualbox server*
     - xorg
     - Gnome Desktop
   
 ## Web Server client VM
 - Ansible 2.4.0 (This is installed during the vagrant up run)
 
-## How to run the deployment
+## Setup the virtualbox host VM ( for windows users - I did this to keep my base OS clean )
+1. Built VM Base vm from CentOS-7-x86_64-Minimal-1708.iso - 8GB Ram, 4CPU, 20GB disk at least
+2. Install git 
+- ```yum install -y git```
+3. Git clone the repo
+- ```git clone https://github.com/srechallenge/SREChallenge.git```
+4. Run setup_virtualbox_server.sh script - installs virtualbox and other requirements
+- ``` sudo utils/setup_virtualbox_server.sh ```
+5. Run setup_serverspec.sh - sets up ruby and serverspec
+- ``` sudo utils/setup_serverspec.sh ```
+
+## How to run the webserver deployment
+- *Assumptions for virtualbox server host* 
+  - Virtualbox 5.1 installed
+  - Ansible 2.3.2 installed
+  - serverspec installed
+  - Vagrant 2.0.0 installed
 1. Git clone the repo
 - ```git clone https://github.com/srechallenge/SREChallenge.git```
 2. cd into vagrant directory
@@ -77,9 +94,36 @@ webserver                  : ok=15   changed=13   unreachable=0    failed=0
 4. Execute serverspec tests
 - From the vagrant directory run the serverspec tests
 -- ../utils/run_tests.sh
-5. Review the output for faulures
+5. Verify Open Ports
+- nmap (IP address at the bottom of step 3)
 ```
-Finished in 4.02 seconds (files took 7.6 seconds to load)
+[user@localhost vagrant]$ nmap 192.168.1.60
+
+Starting Nmap 6.40 ( http://nmap.org ) at 2017-10-08 22:19 EDT
+Nmap scan report for 192.168.1.60
+Host is up (0.98s latency).
+Not shown: 998 filtered ports
+PORT    STATE SERVICE
+80/tcp  open  http
+443/tcp open  https
+
+Nmap done: 1 IP address (1 host up) scanned in 51.60 seconds
+[user@localhost vagrant]$ 
+ ```
+6. Review the output for faulures
+```
+Command "curl http://`ip addr show eth1 |grep "inet " | awk '{print $2}' | cut -d/ -f1`"
+  stdout
+    should match /302/
+
+Command "curl -kL http://`ip addr show eth1 |grep "inet " | awk '{print $2}' | cut -d/ -f1`"
+  stdout
+    should match /Hello World!/
+
+Finished in 3.98 seconds (files took 7.85 seconds to load)
 31 examples, 0 failures
+
+[user@localhost vagrant]$ 
+
 ```
 
