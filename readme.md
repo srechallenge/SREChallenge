@@ -35,17 +35,19 @@
 ## Installed Software
 ### Host VM Installed Software
 - VMWare Player CentOS vm with 8GB ram with 4 CPUs with the following software installed
-  - sudo utils/setup_virtualbox_server.sh  
+  - sudo utils/setup_virtualbox_server.sh  - which installs the following software
     - Vitualbox 5.1.28_117968
     - Ansible 2.3.2 (Can not use version 2.4 due to a bug with the Vagrant --ask_vault_pass flag)
     - Vagrant 2.0.0
     - nmap
-  - sudo utils/setu_serverspec.sh
+    - runs the vboxconfigure command to build the kernel modules
+  - sudo utils/setup_serverspec.sh
     - ruby
     - serverspec
+  - sudo utils/setup_GUI.sh (If you want to use a GUI on your virtualbox server vm)
   
 ## Web Server client VM
-- Ansible 2.4.0
+- Ansible 2.4.0 (This is installed during the vagrant up run)
 
 ## How to run the deployment
 1. Git clone the repo
