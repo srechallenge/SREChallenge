@@ -21,13 +21,15 @@
       state: stopped
 
   - name: Check eth0 to see if it is in the internal firewall zone
-    shell: 'nmcli connection show "System eth0" |grep connection.zone |grep internal'
+    shell: nmcli connection show "System eth0" | grep connection.zone |grep internal
     register: eth0_fw_zone
     changed_when: false
+    ignore_errors: true
 
   - name: Move eth0 into the Internal zone in firewalld
     shell: 'nmcli connection modify "System eth0" connection.zone internal'
-    when: eth0_fw_zone.rc == 1
+    when: eth0_fw_zone.rc == 1 
+#   when: eth0_fw_zone.stdout.find("internal") != -1
 
   - firewalld:
        zone: "{{ item.zone }}"
