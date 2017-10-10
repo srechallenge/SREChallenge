@@ -29,7 +29,6 @@
   - name: Move eth0 into the Internal zone in firewalld
     shell: 'nmcli connection modify "System eth0" connection.zone internal'
     when: eth0_fw_zone.rc == 1 
-#   when: eth0_fw_zone.stdout.find("internal") != -1
 
   - firewalld:
        zone: "{{ item.zone }}"
